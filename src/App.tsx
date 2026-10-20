@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toSinhaNimsara } from "./sinhalaLegacy";
-import { INVITATION, readGuestName } from "./invitation";
+import { INVITATION, RSVP_SCRIPT_URL, readGuestName } from "./invitation";
 import { Sparkles, MapPin, Calendar, Clock, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 
@@ -14,8 +14,6 @@ function NimsaraText({ text }: { text: string }) {
 }
 
 const backgroundMusic = "/handawaka-various-artists.mp3";
-const googleScriptUrl =
-  "https://script.google.com/macros/s/AKfycbx6tVTRxM0Fjc10fR0a35PjSjb9JJN-9F7zDpxyJvVMhdZ3A-_rOkAV8x8Cwpeqfp5NLw/exec";
 
 const publicImagePath = (fileName: string) => `/images/${fileName.replaceAll(" ", "%20")}`;
 const preImagePath = (fileName: string) => `/pre/${encodeURIComponent(fileName)}`;
@@ -316,17 +314,19 @@ export default function WeddingInvitation() {
   const introVideoRef = React.useRef<HTMLVideoElement>(null);
 
   const submitToGoogleSheet = async (payload: Record<string, string>) => {
-    if (!googleScriptUrl) {
-      throw new Error("Google Script URL tl ilid ke;");
+    if (!RSVP_SCRIPT_URL) {
+      throw new Error("RSVP_SCRIPT_URL is not set in src/invitation.ts");
     }
 
-    const response = await fetch(googleScriptUrl, {
+    // Form-encoded body keeps this a "simple" request, so no CORS preflight.
+    const response = await fetch(RSVP_SCRIPT_URL, {
       method: "POST",
       body: new URLSearchParams(payload),
     });
 
-    if (!response.ok) {
-      throw new Error("b,a,Su id¾:l fkdùh");
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      throw new Error(result?.message || "RSVP could not be saved");
     }
   };
 
@@ -345,7 +345,7 @@ export default function WeddingInvitation() {
         action: "rsvp",
         name: rsvpForm.name.trim(),
         guests: rsvpForm.guests,
-        dietaryNotes: "",
+        invitee: guestName ?? "",
       });
 
       setRsvpStatus("success");

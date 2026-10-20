@@ -35,6 +35,11 @@ export const INVITATION = {
   rsvpContacts: [] as string[],
 } as const;
 
+// Google Apps Script Web App URL (see code.gs). Paste the /exec URL from
+// Deploy > Manage deployments after deploying the script.
+export const RSVP_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbz3a1IiIbAg7t6h2zPLSYRvSYPvBslUAEV9ktbxUGz9JABl1tERmSJ890ahmkWkPytL3w/exec";
+
 export const GUEST_PREFIXES = ["Mr.", "Mrs.", "Miss", "Mr. & Mrs.", "Family", "Dear"] as const;
 
 // Sinhala titles follow the name, e.g. "පෙරේරා මහතා".

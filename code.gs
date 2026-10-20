@@ -1,24 +1,45 @@
 /**
- * Google Apps Script Web App for Wedding RSVP + Wishes
+ * Google Apps Script Web App – Sandini & Kosala wedding RSVP
  *
  * Spreadsheet:
- * https://docs.google.com/spreadsheets/d/1DWeuLq0XoCdg0PFXg_uoCuHjW_WVnyam6z0V-zTWn9g/edit
+ * https://docs.google.com/spreadsheets/d/1TykAv68OQt3z5uhHe7FcxSrRd4vVezDCPz7Y-ub_T4E/edit
  *
- * Required sheets:
- * - rsvp
- * - wish
+ * The "RSVP" sheet and its header row are created automatically on the first
+ * submission (or run setup() once from the editor to create them right away).
  */
 
-const SPREADSHEET_ID = "1s7CtSYuu0PeysjHKpaA7d8LQVb_d7xe87XkUu_KQ9lY";
-const RSVP_SHEET_NAME = "rsvp";
-const WISH_SHEET_NAME = "wish";
+const SPREADSHEET_ID = "1TykAv68OQt3z5uhHe7FcxSrRd4vVezDCPz7Y-ub_T4E";
+const RSVP_SHEET_NAME = "RSVP";
+const TIME_ZONE = "Asia/Colombo";
+
+const RSVP_HEADERS = [
+  "දිනය / වේලාව (Timestamp)",
+  "නම (Name)",
+  "පැමිණීම (Attendance)",
+  "ආරාධිත නම (Invited As)",
+];
+
+const ATTENDING_LABEL = "පැමිණේ ✅";
+const DECLINED_LABEL = "නොපැමිණේ ❌";
+
+const MAX_FIELD_LENGTH = 200;
 
 function doPost(e) {
   return handleRequest_(e);
 }
 
 function doGet(e) {
+  // Opening the Web App URL in a browser just confirms it is live.
+  if (!e || !e.parameter || !e.parameter.action) {
+    return jsonResponse_({ ok: true, message: "RSVP service is running" });
+  }
   return handleRequest_(e);
+}
+
+/** Run once from the Apps Script editor to authorise and create the sheet. */
+function setup() {
+  const sheet = getRsvpSheet_();
+  Logger.log("Ready: " + sheet.getParent().getUrl() + "#gid=" + sheet.getSheetId());
 }
 
 function handleRequest_(e) {
@@ -26,16 +47,8 @@ function handleRequest_(e) {
     const params = parseParams_(e);
     const action = String(params.action || "").trim().toLowerCase();
 
-    if (!action) {
-      return jsonResponse_({ ok: false, message: "Missing action" });
-    }
-
     if (action === "rsvp") {
       return jsonResponse_(saveRsvp_(params));
-    }
-
-    if (action === "wish") {
-      return jsonResponse_(saveWish_(params));
     }
 
     return jsonResponse_({ ok: false, message: "Invalid action" });
@@ -48,69 +61,73 @@ function handleRequest_(e) {
 }
 
 function saveRsvp_(params) {
-  const sheet = getSheet_(RSVP_SHEET_NAME);
-
-  ensureHeader_(sheet, [
-    "timestamp",
-    "name",
-    "guests",
-    "attendance",
-    "dietaryNotes",
-  ]);
-
-  const name = String(params.name || "").trim();
-  const guests = String(params.guests || "").trim();
-  const dietaryNotes = String(params.dietaryNotes || "").trim();
+  const name = clean_(params.name);
+  const invitee = clean_(params.invitee);
+  const attending = String(params.guests || "1").trim() !== "0";
 
   if (!name) {
     return { ok: false, message: "Name is required" };
   }
 
-  const attendance = guests === "0" ? "Declined" : "Attending";
-
-  sheet.appendRow([
-    new Date(),
-    name,
-    guests || "1",
-    attendance,
-    dietaryNotes,
-  ]);
+  // Serialise writes so simultaneous submissions don't collide.
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sheet = getRsvpSheet_();
+    sheet.appendRow([
+      Utilities.formatDate(new Date(), TIME_ZONE, "yyyy-MM-dd HH:mm:ss"),
+      name,
+      attending ? ATTENDING_LABEL : DECLINED_LABEL,
+      invitee || "-",
+    ]);
+  } finally {
+    lock.releaseLock();
+  }
 
   return { ok: true, message: "RSVP saved" };
 }
 
-function saveWish_(params) {
-  const sheet = getSheet_(WISH_SHEET_NAME);
-
-  ensureHeader_(sheet, ["timestamp", "name", "message"]);
-
-  const name = String(params.name || "").trim();
-  const message = String(params.message || "").trim();
-
-  if (!name || !message) {
-    return { ok: false, message: "Name and message are required" };
-  }
-
-  sheet.appendRow([new Date(), name, message]);
-
-  return { ok: true, message: "Wish saved" };
-}
-
-function getSheet_(sheetName) {
+function getRsvpSheet_() {
   const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-  let sheet = spreadsheet.getSheetByName(sheetName);
+  let sheet = spreadsheet.getSheetByName(RSVP_SHEET_NAME);
 
   if (!sheet) {
-    sheet = spreadsheet.insertSheet(sheetName);
+    sheet = spreadsheet.insertSheet(RSVP_SHEET_NAME, 0);
+  }
+
+  if (sheet.getLastRow() === 0) {
+    writeHeader_(sheet);
   }
 
   return sheet;
 }
 
-function ensureHeader_(sheet, headers) {
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(headers);
-  }
+function writeHeader_(sheet) {
+  const header = sheet.getRange(1, 1, 1, RSVP_HEADERS.length);
+  header
+    .setValues([RSVP_HEADERS])
+    .setFontWeight("bold")
+    .setFontColor("#ffffff")
+    .setBackground("#7a5c1e")
+    .setHorizontalAlignment("center")
+    .setVerticalAlignment("middle");
+
+  sheet.setFrozenRows(1);
+  sheet.setRowHeight(1, 36);
+  sheet.setColumnWidth(1, 170);
+  sheet.setColumnWidth(2, 220);
+  sheet.setColumnWidth(3, 150);
+  sheet.setColumnWidth(4, 260);
+
+  // Keep text as typed (names like "0771234567" or dates stay unchanged).
+  sheet.getRange("A:D").setNumberFormat("@");
+}
+
+function clean_(value) {
+  return String(value == null ? "" : value)
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_FIELD_LENGTH);
 }
 
 function parseParams_(e) {
@@ -126,12 +143,10 @@ function parseParams_(e) {
   }
 
   if (contents.charAt(0) === "{") {
-    const json = JSON.parse(contents);
-    return Object.assign(params, json);
+    return Object.assign(params, JSON.parse(contents));
   }
 
-  const parsed = parseFormEncoded_(contents);
-  return Object.assign(params, parsed);
+  return Object.assign(params, parseFormEncoded_(contents));
 }
 
 function parseFormEncoded_(raw) {
