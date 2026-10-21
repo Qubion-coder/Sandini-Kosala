@@ -13,7 +13,7 @@ function NimsaraText({ text }: { text: string }) {
   );
 }
 
-const backgroundMusic = "/song.mp3";
+const backgroundMusic = "/handawaka-various-artists.mp3";
 
 const publicImagePath = (fileName: string) => `/images/${fileName.replaceAll(" ", "%20")}`;
 const preImagePath = (fileName: string) => `/pre/${encodeURIComponent(fileName)}`;
@@ -1051,7 +1051,7 @@ export default function WeddingInvitation() {
         )}
       </AnimatePresence>
 
-      <audio ref={audioRef} src={backgroundMusic} loop preload="auto" />
+      <audio ref={audioRef} src={backgroundMusic} loop />
 
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
