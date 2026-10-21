@@ -51,7 +51,13 @@ export const SINHALA_GUEST_SUFFIXES = [
   "ඇතුළු පවුලේ සියලු දෙනා",
 ] as const;
 
-export type GuestPrefix = (typeof GUEST_PREFIXES)[number] | (typeof SINHALA_GUEST_SUFFIXES)[number];
+// Just the guest's name, with no title.
+export const NO_PREFIX = "No prefix";
+
+export type GuestPrefix =
+  | (typeof GUEST_PREFIXES)[number]
+  | (typeof SINHALA_GUEST_SUFFIXES)[number]
+  | typeof NO_PREFIX;
 
 const MAX_GUEST_NAME_LENGTH = 80;
 
@@ -65,6 +71,7 @@ export function formatDisplayName(prefix: GuestPrefix, guestName: string): strin
     case "Family":
       return `${name} and Family`;
     case "Dear":
+    case NO_PREFIX:
       return name;
     default:
       return `${prefix} ${name}`;
@@ -75,7 +82,7 @@ export function formatDisplayName(prefix: GuestPrefix, guestName: string): strin
 // [title index, ...name bytes], where ASCII is one byte and each Sinhala
 // letter is one byte (0x80 + offset in the Sinhala block; 0x80 = ZWJ).
 // ALL_TITLES order is baked into links already sent: only append to it.
-const ALL_TITLES: readonly GuestPrefix[] = [...GUEST_PREFIXES, ...SINHALA_GUEST_SUFFIXES];
+const ALL_TITLES: readonly GuestPrefix[] = [...GUEST_PREFIXES, ...SINHALA_GUEST_SUFFIXES, NO_PREFIX];
 const SHORT_LINK_PATH = "i";
 const SINHALA_BLOCK_START = 0x0d80;
 const ZWJ = 0x200d;

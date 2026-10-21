@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   GUEST_PREFIXES,
   SINHALA_GUEST_SUFFIXES,
+  NO_PREFIX,
   type GuestPrefix,
   INVITATION,
   buildGuestLink,
@@ -84,6 +85,7 @@ export default function Admin() {
                 onChange={(e) => updatePrefix(e.target.value as GuestPrefix)}
                 className="w-full bg-[#fbf6ec] border border-[#a8832f]/30 rounded-xl px-4 py-3 text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#a8832f]/30 focus:border-[#a8832f]"
               >
+                <option value={NO_PREFIX}>{NO_PREFIX} (නම පමණයි)</option>
                 <optgroup label="English (නමට පෙර)">
                   {GUEST_PREFIXES.map((p) => (
                     <option key={p} value={p}>{p}</option>
