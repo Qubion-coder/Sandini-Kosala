@@ -13,7 +13,7 @@ function NimsaraText({ text }: { text: string }) {
   );
 }
 
-const backgroundMusic = "/handawaka-various-artists.mp3";
+const backgroundMusic = "/song.mp3";
 
 const publicImagePath = (fileName: string) => `/images/${fileName.replaceAll(" ", "%20")}`;
 const preImagePath = (fileName: string) => `/pre/${encodeURIComponent(fileName)}`;
@@ -222,7 +222,7 @@ function Gallery() {
             සුන්දර මතක
           </h2>
           <p className="text-[#5c3a1e]/70 text-base md:text-lg tracking-[0.3em] font-medium max-w-2xl mx-auto leading-loose">
-            අපගේ ආදර කතාවේ සුන්දරතම මොහොතක් ඔබ සමඟ බෙදා ගැනීමට අප සතුටින් බලා සිටිමු.
+            අපගේ ආදර කතාවේ සුන්දරතම මොහොතක් ඔබ සමඟ බෙදා ගැනීමට අපි සතුටින් බලා සිටිමු.
           </p>
         </motion.div>
 
@@ -501,17 +501,17 @@ export default function WeddingInvitation() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 2, delay: 0.8 }}
-                    className="text-3xl md:text-7xl text-[#5c3a1e] mb-8 drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)]"
+                    className="text-3xl md:text-7xl text-[#5c3a1e] mb-5 md:mb-8 drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)]"
                   >
                     විවාහ ආරාධනයයි!
                   </motion.h2>
 
-                  <div className="flex flex-col items-center w-full max-w-[280px] mx-auto">
+                  <div className="flex flex-col items-center w-full max-w-[230px] md:max-w-[360px] mx-auto">
                     <motion.p
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 2, delay: 1.2 }}
-                      className="text-3xl md:text-6xl text-[#5c3a1e] tracking-[0.3em] font-bold drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] self-start"
+                      className="text-5xl md:text-7xl leading-none text-[#5c3a1e] font-bold drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] self-start"
                     >
                       <NimsaraText text={INVITATION.couple.bride} />
                     </motion.p>
@@ -520,7 +520,7 @@ export default function WeddingInvitation() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 2, delay: 1.5 }}
-                      className="text-2xl md:text-4xl text-[#5c3a1e]/90 italic drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] my-1"
+                      className="text-2xl md:text-4xl leading-none text-[#5c3a1e]/90 italic drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] -my-1"
                     >
                       &
                     </motion.span>
@@ -529,7 +529,7 @@ export default function WeddingInvitation() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 2, delay: 1.8 }}
-                      className="text-3xl md:text-6xl text-[#5c3a1e] tracking-[0.4em] font-bold drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] self-end"
+                      className="text-5xl md:text-7xl leading-none text-[#5c3a1e] font-bold drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] self-end"
                     >
                       <NimsaraText text={INVITATION.couple.groom} />
                     </motion.p>
@@ -592,17 +592,6 @@ export default function WeddingInvitation() {
                   <h1 className="mt-6 text-6xl sm:text-7xl md:text-8xl text-[#5c3a1e] italic leading-none drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]">
                     <NimsaraText text={INVITATION.couple.groom} />
                   </h1>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35, duration: 0.8 }}
-                  className="mt-4 md:mt-12"
-                >
-                  <p className="mt-1 md:mt-5 text-[#5c3a1e]/70 text-base md:text-lg tracking-[0.15em] font-medium leading-loose max-w-2xl mx-auto">
-                    අපගේ ජීවිතයේ අමතක නොවන සුබ මොහොත ඔබ සමඟ බෙදා ගැනීමට කැමැත්තෙමු!
-                  </p>
                 </motion.div>
               </div>
 
@@ -700,14 +689,18 @@ export default function WeddingInvitation() {
 
                   <div className="text-[#5c3a1e] space-y-6 max-w-3xl mx-auto leading-relaxed text-base md:text-lg">
                     <p className="text-[#1a1a1a]">
-                      {INVITATION.parents.brideFather} මහතාගේ සහ {INVITATION.parents.brideMother} මහත්මියගේ ආදරණීය දියණිය වන
+                      {INVITATION.parents.brideFather} මහතාගේ සහ {INVITATION.parents.brideMother}
+                      <br />
+                      මහත්මියගේ ආදරණීය දියණිය
                     </p>
                     <h3 className="text-3xl md:text-4xl font-bold text-[#8b5a2b] my-2">
                       <NimsaraText text={INVITATION.couple.brideFull} />
                     </h3>
 
                     <p className="text-[#1a1a1a]">
-                      {INVITATION.parents.groomFather} මහතාගේ සහ {INVITATION.parents.groomMother} මහත්මියගේ ආදරණීය පුත් වන
+                      {INVITATION.parents.groomFather} මහතාගේ සහ {INVITATION.parents.groomMother}
+                      <br />
+                      මහත්මියගේ ආදරණීය පුතණුවන්
                     </p>
                     <h3 className="text-3xl md:text-4xl font-bold text-[#8b5a2b] my-2">
                       <NimsaraText text={INVITATION.couple.groomFull} />
@@ -1058,7 +1051,7 @@ export default function WeddingInvitation() {
         )}
       </AnimatePresence>
 
-      <audio ref={audioRef} src={backgroundMusic} loop />
+      <audio ref={audioRef} src={backgroundMusic} loop preload="auto" />
 
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}

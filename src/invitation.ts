@@ -24,7 +24,7 @@ export const INVITATION = {
     { time: "ප.ව. 4.07", label: "පෝරුව චාරිත්‍රය" },
     { time: "ප.ව. 6.00", label: "අමුත්තන්ගේ පැමිණීම" },
     { time: "ප.ව. 7.30", label: "රාත්‍රී භෝජනය" },
-    { time: "ප.ව. 10.15", label: "උත්සවයේ අවසානය" },
+    { time: "ප.ව. 10.00", label: "උත්සවයේ අවසානය" },
   ],
   venue: {
     name: "Seven Say",
