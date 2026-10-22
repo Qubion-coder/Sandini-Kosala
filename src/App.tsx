@@ -1013,7 +1013,7 @@ export default function WeddingInvitation() {
                   </h2>
 
                   <p className="text-[#5c3a1e]/70 text-base md:text-lg tracking-[0.25em] font-medium leading-loose max-w-3xl mx-auto">
-                    සෙනෙහසින් ලියැවෙන අපගේ ජීවිත කතාවේ සුන්දරතම දිනය, ඔබගේ පැමිණීමෙන් තවත් අර්ථවත් වනු ඇතැයි අප විශ්වාස කරමු
+                    සෙනෙහසින් ලියැවෙන අපගේ ජීවිත කතාවේ සුන්දරතම දිනය, ඔබගේ පැමිණීමෙන් තවත් අර්ථවත් වනු ඇතැයි අපි විශ්වාස කරමු
                   </p>
 
                   {INVITATION.rsvpContacts.length > 0 && (
@@ -1037,10 +1037,18 @@ export default function WeddingInvitation() {
 
                   <div className="pt-8 flex flex-col items-center gap-3">
                     <div className="h-px w-16 bg-[#a8832f]/40" />
-                    <p className="text-sm md:text-base text-[#5c3a1e]/80 leading-relaxed max-w-md mx-auto">
+                    <p className="text-sm md:text-base text-[#a8832f] tracking-wider leading-relaxed max-w-md mx-auto">
                       Want a beautiful wedding website like this?{" "}
                       <span className="whitespace-nowrap">
-                        Create yours with <span className="font-bold text-[#7a5c1e]">invitemint</span>
+                        Create yours with{" "}
+                        <a
+                          href="https://wa.me/94707819074"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold text-[#5c3a1e] underline decoration-[#a8832f]/60 underline-offset-4 hover:text-[#a8832f] transition-colors"
+                        >
+                          invitemint
+                        </a>
                       </span>
                     </p>
                   </div>
