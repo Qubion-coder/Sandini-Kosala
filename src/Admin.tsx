@@ -115,7 +115,7 @@ export default function Admin() {
 
           {previewName && (
             <p className="text-base text-[#333333]">
-              ආරාධනාව: <span className="font-bold text-[#5c3a1e]">ආදරණීය {previewName} ❤️</span>
+              ආරාධනාව: <span className="font-bold text-[#5c3a1e]">ආදරණීය {previewName} 🤎</span>
             </p>
           )}
 

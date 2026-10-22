@@ -64,8 +64,15 @@ const MAX_GUEST_NAME_LENGTH = 80;
 // "Dear" is a greeting style, not part of the name: the message greeting
 // already says "ආදරණීය" (Dear), so the display name is just the guest name.
 export function formatDisplayName(prefix: GuestPrefix, guestName: string): string {
-  const name = guestName.trim().replace(/\s+/g, " ");
-  if (!name) return "";
+  const name = normalizeName(guestName);
+  return name ? applyTitle(prefix, name) : "";
+}
+
+function normalizeName(value: string): string {
+  return value.trim().replace(/\s+/g, " ");
+}
+
+function applyTitle(prefix: GuestPrefix, name: string): string {
   if ((SINHALA_GUEST_SUFFIXES as readonly string[]).includes(prefix)) return `${name} ${prefix}`;
   switch (prefix) {
     case "Family":
@@ -120,7 +127,7 @@ function fromBase64Url(code: string): number[] | null {
 
 export function buildGuestLink(baseUrl: string, prefix: GuestPrefix, guestName: string): string {
   const base = baseUrl.replace(/\/+$/, "");
-  const name = guestName.trim().replace(/\s+/g, " ");
+  const name = normalizeName(guestName);
   const nameBytes = encodeNameBytes(name);
   // Names outside ASCII/Sinhala (e.g. Tamil) fall back to the readable long form.
   if (!nameBytes) return `${base}/${encodeURIComponent(formatDisplayName(prefix, name))}`;
@@ -137,19 +144,17 @@ function decodeShortCode(code: string): string | null {
 export function buildInvitationMessage(displayName: string, link: string): string {
   const { bride, groom } = INVITATION.couple;
   return [
-    "💌 ✨ විවාහ ආරාධනාවයි ✨ 💌",
+    "✉️✨ විවාහ ආරාධනාවයි ✨✉️",
     "",
-    `ආදරණීය ${displayName} ❤️`,
+    `ආදරණීය ${displayName} 🤎`,
     "",
-    "අපගේ ආදරණීය විවාහ දිනයේ සතුටුදායක මොහොත ඔබ සමඟ බෙදාගැනීමට අපි ආදරයෙන් ආරාධනා කරමු 💕🌸",
+    "අපගේ ආදරණීය විවාහ දිනයේ සතුටුදායක මොහොත අප සමඟ බෙදාගැනීමට අපි ඔබට ආදරයෙන් ආරාධනා කරමු 🤎🌻",
     "",
     "අපගේ විවාහ ආරාධනා පත්‍රය 💍✨",
     link,
     "",
-    "අපගේ ආදරණීය විශේෂ දිනය තවත් ළං වී ඇත ❤️ 🌺",
-    "",
-    "ආදරයෙන්, 💕",
-    `${bride} සහ ${groom} 💍 ✨`,
+    "ආදරයෙන්, 🤎🌻",
+    `${bride} සහ ${groom} 💍✨`,
   ].join("\n");
 }
 
